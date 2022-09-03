@@ -1,5 +1,5 @@
 using System.Text;
-using Domain.Models.ApplicationContext;
+using Domain.Models.ApplicationIdentityContext;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -7,14 +7,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Server.Authorization.Service;
+using Server.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddDbContext<IdentityCostomDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr") ?? string.Empty));
+builder.Services.AddDbContext<ApllicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr") ?? string.Empty));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<IdentityCostomDbContext>()
+    .AddEntityFrameworkStores<ApllicationDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
@@ -40,6 +41,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.RegisterService();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

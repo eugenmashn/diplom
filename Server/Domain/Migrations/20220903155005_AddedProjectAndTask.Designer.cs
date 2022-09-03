@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApllicationDbContext))]
-    [Migration("20220903134124_Initial")]
-    partial class Initial
+    [Migration("20220903155005_AddedProjectAndTask")]
+    partial class AddedProjectAndTask
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,45 @@ namespace Domain.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Domain.Models.ApplicationContext.ProjectTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AssigneeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ReporterId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Tracking")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("WorkFlow")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("ReporterId");
+
+                    b.ToTable("ProjectTasks");
+                });
 
             modelBuilder.Entity("Domain.Models.Identity.ApplicationUser", b =>
                 {
@@ -99,6 +138,33 @@ namespace Domain.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Models.ProjectContext.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -234,6 +300,38 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.ApplicationContext.ProjectTask", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.ApplicationUser", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId");
+
+                    b.HasOne("Domain.Models.ProjectContext.Project", "Project")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Identity.ApplicationUser", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId");
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Reporter");
+                });
+
+            modelBuilder.Entity("Domain.Models.ProjectContext.Project", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.ApplicationUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -283,6 +381,11 @@ namespace Domain.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.ProjectContext.Project", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }
