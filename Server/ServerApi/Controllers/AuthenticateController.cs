@@ -87,6 +87,7 @@ public class AuthenticateController : ControllerBase
             SecurityStamp = Guid.NewGuid().ToString(),
             UserName = model.Username
         };
+        await _userManager.AddToRoleAsync(user, Roles.Developer); // default roles
         var result = await _userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded)
