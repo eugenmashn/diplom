@@ -9,7 +9,7 @@ public static class ServiceDIHelper
     public static IServiceCollection RegisterService(this IServiceCollection services)
     {
         services.AddScoped<IProjectService, ProjectService>();
-        services.AddScoped<IProjectTaskService, IProjectTaskService>();
+        services.AddScoped<IProjectTaskService, ProjectTaskService>();
         return services;
     }
 }
