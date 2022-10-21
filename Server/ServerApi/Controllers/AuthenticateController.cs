@@ -87,13 +87,11 @@ public class AuthenticateController : ControllerBase
             SecurityStamp = Guid.NewGuid().ToString(),
             UserName = model.Username
         };
-        await _userManager.AddToRoleAsync(user, Roles.Developer); // default roles
-        var result = await _userManager.CreateAsync(user, model.Password);
-
+        var result = await _userManager.CreateAsync(user, model.Password); 
         if (!result.Succeeded)
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new ResponseAuth
-                    {Status = "Error", Message = "User creation failed! Please check user details and try again."});
+            return BadRequest(result.Errors);
+        await _userManager.AddToRoleAsync(user, Roles.Developer); // default roles
+        
 
         return Ok(new ResponseAuth {Status = "Success", Message = "User created successfully!"});
     }
