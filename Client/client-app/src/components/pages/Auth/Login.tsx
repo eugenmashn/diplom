@@ -22,7 +22,7 @@ const Loginn = () => {
             refreshToken: reosponse.refreshToken
         }));
         if (reosponse.token) {
-            navigate('/');
+            navigate('/dashboard');
         }
     }
 

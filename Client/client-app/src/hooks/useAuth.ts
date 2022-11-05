@@ -9,3 +9,9 @@ export const useAuth = () => {
 
     return useMemo(() => ({ user }), [user])
 }
+
+export const useIsAutorized = () => {
+    const user = useSelector(selectCurrentUser)
+
+    return useMemo(() => !!user, [user])
+}

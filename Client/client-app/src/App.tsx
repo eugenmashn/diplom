@@ -1,23 +1,24 @@
 import React from 'react';
 import './App.css';
-import AppToolbar from './components/ui/app-toolbar';
+import AppToolbar from './components/ui/AppToolbar';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Dashboard} from '@mui/icons-material';
 import Login from './components/pages/Auth/Login';
 import {ProtectedRoute} from './components/routes/ProtectedRoute';
+import Dashboard from './components/pages/Dashboard/Dashboard';
+import AppBar from '@mui/material/AppBar';
 
 
 function App() {
     return (
         <div className='App'>
             <BrowserRouter>
-                <header><AppToolbar></AppToolbar></header>
+                <AppBar position='absolute'>
+                    <header><AppToolbar></AppToolbar></header>
+                </AppBar>
+
                 <Routes>
-                    <Route path='/' element={
-                        <ProtectedRoute>
-                            <Dashboard/>
-                        </ProtectedRoute>}>
-                        <Route path='/home' element={<Login/>}>
+                    <Route path='/' element={<ProtectedRoute><Dashboard/></ProtectedRoute>}>
+                        <Route path='/dashboard' element={<ProtectedRoute><Dashboard/></ProtectedRoute>}>
                         </Route>
                     </Route>
                     <Route path='/login' element={<Login/>}>
