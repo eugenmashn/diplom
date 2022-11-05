@@ -64,6 +64,7 @@ public class AuthenticateController : ControllerBase
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
+                User = user,
                 Expiration = token.ValidTo
             });
         }
@@ -85,7 +86,11 @@ public class AuthenticateController : ControllerBase
         {
             Email = model.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = model.Username
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            UserName = model.Username,
+            PhoneNumber = model.PhoneNumber,
+            Photo = model.Photo
         };
         var result = await _userManager.CreateAsync(user, model.Password); 
         if (!result.Succeeded)

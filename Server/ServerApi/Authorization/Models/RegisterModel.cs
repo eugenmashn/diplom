@@ -5,12 +5,17 @@ namespace Server.Authorization.Models;
 public class RegisterModel
 {
     [Required(ErrorMessage = "User Name is required")]
-    public string? Username { get; set; }
-
+    public string Username { get; set; }
+    [Required(ErrorMessage = "User FirstName is required")]
+    public string FirstName { get; set; }
+    [Required(ErrorMessage = "User LastName is required")]
+    public string LastName { get; set; }
     [EmailAddress]
     [Required(ErrorMessage = "Email is required")]
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
     [Required(ErrorMessage = "Password is required")]
-    public string? Password { get; set; }
+    public string Password { get; set; }
+    public string? Photo { get; set; }
+    public string? PhoneNumber { get; set; }
 }
